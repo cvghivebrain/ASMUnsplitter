@@ -45,6 +45,7 @@ end;
 function CleanLine(s: string): string;
 begin
   s := Explode(s,';',0); // Strip comments.
+  s := ReplaceStr(s,':',' '); // Replace colons with spaces.
   s := ReplaceStr(s,#9,' '); // Replace tabs with spaces.
   s := ReplaceStr(s,#39,'"'); // Replace single quotes with double quotes.
   while AnsiPos('  ',s) <> 0 do s := ReplaceStr(s,'  ',' '); // Replace double spaces with single.
@@ -84,7 +85,7 @@ begin
   currentline := CleanLine(buffer[i]); // Get line without tabs, comments etc.
   if AnsiPos(' include "',currentline) = 0 then goto nextline; // Final check for positive "include".
   copylabel := Trim(Explode(currentline,' include "',0)); // Get label (if there is one).
-  if (AnsiPos(':',copylabel) = 0) and (copylabel <> '') then copylabel := copylabel+':'; // Add colon if needed. 
+  if copylabel <> '' then copylabel := copylabel+':'; // Add colon to label.
   buffer[i] := copylabel; // Replace line with label only.
   InsertFile(Explode(currentline,'"',1),i+1); // Insert external file at current line.
 
